@@ -1,19 +1,57 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
-import OnboardingScreen from './src/components/OnboardingScreen';
-import LoginScreen from './src/components/LoginScreen';
-
-const Stack = createNativeStackNavigator();
+import CoffeeLoginScreen from './src/components/CoffeeLoginScreen';
+import CoffeeVerificationScreen from './src/components/CoffeeVerificationScreen';
 
 export default function App() {
+  const [screen, setScreen] = useState('login');
+  const [phone, setPhone] = useState('');
+
+  if (screen === 'login') {
+    return (
+      <CoffeeLoginScreen
+        onContinue={(number) => {
+          setPhone(number);
+          setScreen('verification');
+        }}
+      />
+    );
+  }
+
+  if (screen === 'verification') {
+    return (
+      <CoffeeVerificationScreen
+        phone={phone}
+        onBack={() => setScreen('login')}
+        onContinue={() => setScreen('home')}
+      />
+    );
+  }
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <View style={styles.container}>
+      <Text style={styles.title}>☕ Coffee Shop</Text>
+      <Text style={styles.subtitle}>Қош келдіңіз!</Text>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFF8F0',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#59351F',
+  },
+  subtitle: {
+    fontSize: 18,
+    color: '#8B7566',
+    marginTop: 15,
+  },
+});
